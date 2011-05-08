@@ -5,6 +5,7 @@ class Distance
 {
     private static function _compatibleData(array $v1, array $v2)
     {
+        // check that each vector member is of numeric type
         foreach ($v1 as $item) {
             if (!is_numeric($item)) {
                 throw new \Exception('Vectors must contain numeric data, non-numeric item found: '.$item);
@@ -15,6 +16,8 @@ class Distance
                 throw new \Exception('Vectors must contain numeric data, non-numeric item found: '.$item);
             }
         }
+        
+        // check it both vectors have the same size
         return (count($v1) == count($v2));
     }
 
