@@ -1,0 +1,8 @@
+Class that implements some distance metrics:
+
+- Euclidean
+- Manhattan (aka Taxicab Distance)
+- Chebyshev
+- Minkowski
+
+The static methods expect numeric arrays representing n-dimensional vectors.
