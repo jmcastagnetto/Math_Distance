@@ -24,11 +24,11 @@ namespace PEAR2\Math;
  * $m = \PEAR2\Math\Distance::minkowski($v1, $v2);
  * $t = \PEAR2\Math\Distance::manhattan($v1, $v2);
  * $c = \PEAR2\Math\Distance::chebyshev($v1, $v2);
- *
  * $s = \PEAR2\Math\Distance::hamming('1011101','1001001');
  *
  */
-class Distance {
+class Distance
+{
     /**
      * Private method to check whether we got numeric vectors of identical size
      *
@@ -113,9 +113,9 @@ class Distance {
      * - http://xlinux.nist.gov/dads/HTML/lmdistance.html
      * - http://goo.gl/AktXh (Article at code10.info)
      *
-     * @param array $v1 first vector
-     * @param array $v2 second vector
-     * @param double $order the Lp metric
+     * @param array  $v1	first vector
+     * @param array  $v2	second vector
+     * @param double $order	the Lp metric
      *
      * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Minkowski distance of the given order between v1 and v2
@@ -242,8 +242,8 @@ class Distance {
      * - http://mathworld.wolfram.com/HammingDistance.html
      * - http://en.wikipedia.org/wiki/Hamming_distance
      *'
-     * @param string $s1
-     * @param string $s2
+     * @param string $s1 first string
+     * @param string $s2 second string
      * @throws \PEAR2\Math\Distance\Exception if parameters are not strings of the same length
      * @return integer the hamming length from s1 to s2
      *
