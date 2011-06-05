@@ -34,8 +34,10 @@ class Distance {
      *
      * @param array $v1 first numeric vector
      * @param array $v2 second numeric vector
+     *
      * @throws \PEAR2\Math\Distance\Exception if vectors are not numeric or dissimilar size
      * @return boolean true if vectors are of same size, false if not
+     *
      */
     private static function _compatibleData(array $v1, array $v2)
     {
@@ -66,13 +68,14 @@ class Distance {
      *
      * @param array $v1 first vector
      * @param array $v2 second vector
+     *
      * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Euclidean distance between v1 and v2
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4)) throws \PEAR2\Math\Distance\Exception
      * @assert (array(1,2), array(3,4)) == sqrt(8)
-     * @assert (array(2,4,6,7), array(4,5,1,9)) == 5.8309518948453
+     * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
      *
      */
     public static function euclidean(array $v1, array $v2)
@@ -113,13 +116,14 @@ class Distance {
      * @param array $v1 first vector
      * @param array $v2 second vector
      * @param double $order the Lp metric
+     *
      * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Minkowski distance of the given order between v1 and v2
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4), 2) throws \PEAR2\Math\Distance\Exception
-     * @assert (array(3,4,2,1), array(0,5,6,9), 3) == 4.4814047465572
-     * @assert (array(3,4,2,1), array(0,5,6,9), 4.2) == 2.9194150032036
+     * @assert (array(3,4,2,1), array(0,5,6,9), 3) == pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),1/3)
+     * @assert (array(3,4,2,1), array(0,5,6,9), 4.2) == pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),1/4.2)
      *
      */
     public static function minkowski(array $v1, array $v2, $order=0)
@@ -140,7 +144,7 @@ class Distance {
                     $n = count($v1);
                     $sum = 0;
                     for ($i=0; $i < $n; $i++) {
-                        $sum += pow(($v1[$i] - $v2[$i]), 2);
+                        $sum += pow(($v1[$i] - $v2[$i]), $order);
                     }
                     return pow($sum, 1/$order);
                 } else {
@@ -166,6 +170,7 @@ class Distance {
      *
      * @param array $v1 first vector
      * @param array $v2 second vector
+     *
      * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Manhattan distance between v1 and v2
      * @see _compatibleData()
@@ -203,6 +208,7 @@ class Distance {
      *
      * @param array $v1 first vector
      * @param array $v2 second vector
+     *
      * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Chebyshev distance between v1 and v2
      * @see _compatibleData()
@@ -235,7 +241,7 @@ class Distance {
      * Refs:
      * - http://mathworld.wolfram.com/HammingDistance.html
      * - http://en.wikipedia.org/wiki/Hamming_distance
-     *
+     *'
      * @param string $s1
      * @param string $s2
      * @throws \PEAR2\Math\Distance\Exception if parameters are not strings of the same length
