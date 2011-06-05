@@ -1,1 +1,5 @@
 .project
+.buildpath
+*.swp
+.project
+.settings
