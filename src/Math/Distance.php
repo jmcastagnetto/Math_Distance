@@ -1,22 +1,31 @@
 <?php
 /**
- * @author Jesus M. Castagnetto <jmcastagnetto@php.net>
+ * PEAR2_Math_Distance
  *
+ * @category	pear
+ * @package		PEAR2_Math_Distance
+ * @author		Jesus M. Castagnetto <jmcastagnetto@php.net>
+ * @license		http://opensource.org/licenses/bsd-license.php New BSD License
+ * @since		File available since version 0.1.0
+ * @copyright	2011 The PHP Group
  */
 namespace PEAR2\Math {
 
     /**
-     * Class to compute common distance metrics
+     * Class to calculate common distance metrics
      *
-     * It implements methods to compute the Euclidean, Minkowski, Manhattan and Chebyshev metrics
+     * It implements methods to compute vector distance metrics
+     * (Euclidean, Minkowski, Manhattan and Chebyshev) as well as
+     * a string distance metric (Hamming)
      *
      * $v1 = array(0,2,4,5);
      * $v2 = array(1,4,7,2);
+     * $e = \PEAR2\Math\Distance::euclidean($v1, $v2);
+     * $m = \PEAR2\Math\Distance::minkowski($v1, $v2);
+     * $t = \PEAR2\Math\Distance::manhattan($v1, $v2);
+     * $c = \PEAR2\Math\Distance::chebyshev($v1, $v2);
      *
-     * $e = PEAR2\Math\Distance::euclidean($v1, $v2);
-     * $m = PEAR2\Math\Distance::minkowski($v1, $v2);
-     * $t = PEAR2\Math\Distance::manhattan($v1, $v2);
-     * $c = PEAR2\Math\Distance::chebyshev($v1, $v2);
+     * $s = \PEAR2\Math\Distance::hamming('1011101','1001001');
      *
      */
     class Distance
@@ -50,7 +59,7 @@ namespace PEAR2\Math {
          * Euclidean distance metric between two vectors
          *
          * The euclidean distance between two vectors (v1, v2) is defined as
-         * D = SQRT(SUM((v1(i) - v2(i))^2))  (i = 0..n)
+         * D = SQRT(SUM((v1(i) - v2(i))^2))  (i = 0..k)
          *
          * Refs:
          * - http://mathworld.wolfram.com/EuclideanMetric.html
@@ -59,7 +68,7 @@ namespace PEAR2\Math {
          * @param array $v1 first vector
          * @param array $v2 second vector
          * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
-         * @return The euclidean distance between v1 and v2
+         * @return double The Euclidean distance between v1 and v2
          * @see _compatibleData()
          *
          */
@@ -69,7 +78,7 @@ namespace PEAR2\Math {
                 $n = count($v1);
                 $sum = 0;
                 for ($i=0; $i < $n; $i++) {
-                    $sum = ($v1[$i] - $v2[$i]) * ($v1[$i] - $v2[$i]);
+                    $sum += ($v1[$i] - $v2[$i]) * ($v1[$i] - $v2[$i]);
                 }
                 return sqrt($sum);
             } else {
@@ -80,17 +89,38 @@ namespace PEAR2\Math {
         /**
          * Minkowski distance metric between two vectors
          *
-         * @param $v1
-         * @param $v2
-         * @param $order
+         * The Minkowski distance is a generalization of the a metric in
+         * Euclidean space and includes as special cases the Euclidean,
+         * Manhattan and Chebyshev distances.
+         *
+         * It is also known as the Lp metric (where p is the metric order)
+         *
+         * This distance is defined as
+         * D = (SUM((v1(i) - v2(i))^p))^(1/p) (i = 0..k)
+         * where: p = 1..n
+         * when p = 1 => reduces to the Manhattan distance
+         * when p = 2 => reduces to the Euclidean distance
+         * when p -> infinite => reduces to the Chebyshev distance
+         *
+         * Refs:
+         * - http://en.wikipedia.org/wiki/Minkowski_distance
+         * - http://xlinux.nist.gov/dads/HTML/lmdistance.html
+         * - http://goo.gl/AktXh (Article at code10.info)
+         *
+         * @param array $v1 first vector
+         * @param array $v2 second vector
+         * @param double $order the Lp metric
+         * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+         * @return double The Minkowski distance of the given order between v1 and v2
+         * @see _compatibleData()
          */
         public static function minkowski(array $v1, array $v2, $order=0)
         {
             switch ($order) {
-                case 0 :
+                case 0 : // undefined
                     throw new \PEAR2\Math\Distance\Exception('Minkowski distance order cannot be zero');
                     break;
-                case 1 :
+                case 1 : // reduces to the Manhattan distance
                     return Distance::manhattan($v1, $v2);
                     break;
                 case 2 :
@@ -102,7 +132,7 @@ namespace PEAR2\Math {
                         $n = count($v1);
                         $sum = 0;
                         for ($i=0; $i < $n; $i++) {
-                            $sum = power(($v1[$i] - $v2[$i]), 2);
+                            $sum += power(($v1[$i] - $v2[$i]), 2);
                         }
                         return power($sum, 1/$order);
                     } else {
@@ -112,10 +142,25 @@ namespace PEAR2\Math {
         }
 
         /**
-         * Manhattak (aka "Taxicab") distance metric between two vectors
+         * Manhattan (aka "Taxicab") distance metric between two vectors
          *
-         * @param $v1
-         * @param $v2
+         * The Manhattan (or Taxicab) distance is defined as the sum of the
+         * absolute differences between the vector coordinates, and akin to
+         * the type of path that one takes when walking around a city block.
+         *
+         * This distance is defined as
+         * D = SUM( ABS(v1(i) - v2(i)) )    (i = 0..k)
+         *
+         * Refs:
+         * - http://en.wikipedia.org/wiki/Manhattan_distance
+         * - http://xlinux.nist.gov/dads/HTML/manhattanDistance.html
+         * - http://mathworld.wolfram.com/TaxicabMetric.html
+         *
+         * @param array $v1 first vector
+         * @param array $v2 second vector
+         * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+         * @return double The Manhattan distance between v1 and v2
+         * @see _compatibleData()
          */
         public static function manhattan($v1, $v2)
         {
@@ -123,7 +168,7 @@ namespace PEAR2\Math {
                 $n = count($v1);
                 $sum = 0;
                 for ($i=0; $i < $n; $i++) {
-                    $sum = abs($v1[$i] - $v2[$i]);
+                    $sum += abs($v1[$i] - $v2[$i]);
                 }
                 return $sum;
             } else {
@@ -132,13 +177,24 @@ namespace PEAR2\Math {
         }
 
         /**
-         * Chenyshev disntance metric between two vectors
+         * Chebyshev distance metric between two vectors
          *
+         * The Chebyshev distance aka the Maximum metric (L[inf])
+         * is the greatest of their differences along any coordinate.
          *
-         * @param unknown_type $v1
-         * @param unknown_type $v2
+         * This distance is defined as
+         * D = MAX( ABS(v1(i) - v2(i)) )  (i = 0..k)
+         *
+         * Refs:
+         * - http://en.wikipedia.org/wiki/Chebyshev_distance
+         *
+         * @param array $v1 first vector
+         * @param array $v2 second vector
+         * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+         * @return double The Chebyshev distance between v1 and v2
+         * @see _compatibleData(
          */
-        public static function chebyshev($v1, $v2)
+        public static function chebyshev(array $v1, array $v2)
         {
             if (Distance::_compatibleData($v1, $v2)) {
                 $n = count($v1);
@@ -155,6 +211,13 @@ namespace PEAR2\Math {
         /**
          * Hamming distance between two strings
          *
+         * The Hamming distance is defined as the number of positions
+         * at which two strings of equal lenght differ
+         *
+         * Refs:
+         * - http://mathworld.wolfram.com/HammingDistance.html
+         * - http://en.wikipedia.org/wiki/Hamming_distance
+         *
          * @param string $s1
          * @param string $s2
          * @throws \PEAR2\Math\Distance\Exception if parameters are not strings of the same length
@@ -170,8 +233,6 @@ namespace PEAR2\Math {
             }
         }
     }
-
-    // echo Distance::hamming('1011101','1001001')."\n";
 }
 
 ?>
