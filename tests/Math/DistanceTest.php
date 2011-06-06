@@ -25,7 +25,7 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws \Distance\Exception.
+     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws PEAR2\Math\Distance\Exception.
      * @expectedException PEAR2\Math\Distance\Exception
      */
     public function testEuclidean()
@@ -56,7 +56,7 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4), 2) throws \Distance\Exception.
+     * Generated from @assert (array(1,2,3), array(1,2,3,4), 2) throws PEAR2\Math\Distance\Exception.
      * @expectedException PEAR2\Math\Distance\Exception
      */
     public function testMinkowski()
@@ -87,7 +87,7 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws \Distance\Exception.
+     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws PEAR2\Math\Distance\Exception.
      * @expectedException PEAR2\Math\Distance\Exception
      */
     public function testManhattan()
@@ -118,7 +118,7 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws \Distance\Exception.
+     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws PEAR2\Math\Distance\Exception.
      * @expectedException PEAR2\Math\Distance\Exception
      */
     public function testChebyshev()
