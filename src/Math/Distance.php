@@ -2,12 +2,14 @@
 /**
  * PEAR2_Math_Distance
  *
- * @category	pear
- * @package		PEAR2_Math_Distance
- * @author		Jesus M. Castagnetto <jmcastagnetto@php.net>
- * @license		http://opensource.org/licenses/bsd-license.php New BSD License
- * @since		File available since version 0.1.0
- * @copyright	2011 The PHP Group
+ * @category  Pear2
+ * @package   PEAR2_Math_Distance
+ * @author    Jesus M. Castagnetto <jmcastagnetto@php.net>
+ * @copyright 2011 Jesús M. Castagnetto
+ * @license   http://opensource.org/licenses/bsd-license.php New BSD License
+ * @version   0.1.0
+ * @link      http://github.com/jmcastagnetto/PEAR2_Math_Distance
+ * @since     File available since version 0.1.0
  */
 namespace PEAR2\Math;
 
@@ -25,6 +27,14 @@ namespace PEAR2\Math;
  * $t = \PEAR2\Math\Distance::manhattan($v1, $v2);
  * $c = \PEAR2\Math\Distance::chebyshev($v1, $v2);
  * $s = \PEAR2\Math\Distance::hamming('1011101','1001001');
+ *
+ * @category  Pear2
+ * @package   PEAR2_Math_Distance
+ * @author    Jesus M. Castagnetto <jmcastagnetto@php.net>
+ * @copyright 2011 Jesús M. Castagnetto
+ * @license   http://opensource.org/licenses/bsd-license.php New BSD License
+ * @link      http://github.com/jmcastagnetto/PEAR2_Math_Distance
+ * @since     File available since version 0.1.0
  *
  */
 class Distance
@@ -131,26 +141,22 @@ class Distance
      */
     public static function minkowski(array $v1, array $v2, $order=0)
     {
-        switch ($order) {
-            case 0 : // undefined
-                throw new \PEAR2\Math\Distance\Exception('Minkowski distance order cannot be zero');
-                break;
-            case 1 : // reduces to the Manhattan distance
-                return Distance::manhattan($v1, $v2);
-                break;
-            case 2 :
-                return Distance::euclidean($v1, $v2);
-                break;
-            default :
-                $order = (double) $order;
-                if (Distance::_compatibleData($v1, $v2)) {
-                    $n = count($v1);
-                    $sum = 0;
-                    for ($i=0; $i < $n; $i++) {
-                        $sum += pow(($v1[$i] - $v2[$i]), $order);
-                    }
-                    return pow($sum, 1/$order);
+        if (0 == $order) {
+            throw new \PEAR2\Math\Distance\Exception('Minkowski distance order cannot be zero');
+        } elseif (1 == $order) {
+            return Distance::manhattan($v1, $v2);
+        } elseif (2 == $order) {
+            return Distance::euclidean($v1, $v2);
+        } else {
+            $order = (double) $order;
+            if (Distance::_compatibleData($v1, $v2)) {
+                $n = count($v1);
+                $sum = 0;
+                for ($i=0; $i < $n; $i++) {
+                    $sum += pow(($v1[$i] - $v2[$i]), $order);
                 }
+                return pow($sum, 1/$order);
+            }
         }
     }
 
@@ -238,9 +244,10 @@ class Distance
      * Refs:
      * - http://mathworld.wolfram.com/HammingDistance.html
      * - http://en.wikipedia.org/wiki/Hamming_distance
-     *'
+     *
      * @param string $s1 first string
      * @param string $s2 second string
+     *
      * @throws \PEAR2\Math\Distance\Exception if parameters are not strings of the same length
      * @return integer the hamming length from s1 to s2
      *
