@@ -53,7 +53,12 @@ class Distance
             }
         }
         // check it both vectors have the same size
-        return (count($v1) == count($v2));
+        if (count($v1) != count($v2)) {
+            throw new \PEAR2\Math\Distance\Exception('Vectors must be of equal size: n1='.count($v1).', n2='.count($v2));
+        } else {
+            return true;
+        }
+
     }
 
     /**
@@ -87,8 +92,6 @@ class Distance
                 $sum += ($v1[$i] - $v2[$i]) * ($v1[$i] - $v2[$i]);
             }
             return sqrt($sum);
-        } else {
-            throw new \PEAR2\Math\Distance\Exception('Incompatible vector sizes');
         }
     }
 
@@ -147,8 +150,6 @@ class Distance
                         $sum += pow(($v1[$i] - $v2[$i]), $order);
                     }
                     return pow($sum, 1/$order);
-                } else {
-                    throw new \PEAR2\Math\Distance\Exception('Incompatible vector sizes');
                 }
         }
     }
@@ -189,8 +190,6 @@ class Distance
                 $sum += abs($v1[$i] - $v2[$i]);
             }
             return $sum;
-        } else {
-            throw new \PEAR2\Math\Distance\Exception('Incompatible vector sizes');
         }
     }
 
@@ -227,8 +226,6 @@ class Distance
                 $diffvals[$i] = abs($v1[$i] - $v2[$i]);
             }
             return max($diffvals);
-        } else {
-            throw new \PEAR2\Math\Distance\Exception('Incompatible vector sizes');
         }
     }
 
@@ -258,7 +255,7 @@ class Distance
             $res = array_diff_assoc(str_split($s1), str_split($s2));
             return count($res);
         } else {
-            throw \PEAR2\Math\Distance\Exception('Expecting two strings of equal lenght');
+            throw \PEAR2\Math\Distance\Exception('Expecting two strings of equal length');
         }
     }
 }
