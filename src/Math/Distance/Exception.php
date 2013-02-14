@@ -1,8 +1,4 @@
 <?php
+namespace Math\Distance;
 
-namespace PEAR2\Math\Distance;
-
-class Exception extends \Exception
-{
-}
-?>
+class Exception extends \Exception {}

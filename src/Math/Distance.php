@@ -1,17 +1,17 @@
 <?php
 /**
- * PEAR2_Math_Distance
+ * Math_Distance
  *
- * @category  Pear2
- * @package   PEAR2_Math_Distance
+ * @category  Math
+ * @package   Math_Distance
  * @author    Jesus M. Castagnetto <jmcastagnetto@php.net>
  * @copyright 2011 Jesús M. Castagnetto
  * @license   http://opensource.org/licenses/bsd-license.php New BSD License
  * @version   0.1.0
- * @link      http://github.com/jmcastagnetto/PEAR2_Math_Distance
+ * @link      http://github.com/jmcastagnetto/Math_Distance
  * @since     File available since version 0.1.0
  */
-namespace PEAR2\Math;
+namespace Math;
 
 /**
  * Class to calculate common distance metrics
@@ -22,11 +22,11 @@ namespace PEAR2\Math;
  *
  * $v1 = array(0,2,4,5);
  * $v2 = array(1,4,7,2);
- * $e = \PEAR2\Math\Distance::euclidean($v1, $v2);
- * $m = \PEAR2\Math\Distance::minkowski($v1, $v2);
- * $t = \PEAR2\Math\Distance::manhattan($v1, $v2);
- * $c = \PEAR2\Math\Distance::chebyshev($v1, $v2);
- * $s = \PEAR2\Math\Distance::hamming('1011101','1001001');
+ * $e = Math\Distance::euclidean($v1, $v2);
+ * $m = Math\Distance::minkowski($v1, $v2);
+ * $t = Math\Distance::manhattan($v1, $v2);
+ * $c = Math\Distance::chebyshev($v1, $v2);
+ * $s = Math\Distance::hamming('1011101','1001001');
  *
  * @category  Pear2
  * @package   PEAR2_Math_Distance
@@ -45,7 +45,7 @@ class Distance
      * @param array $v1 first numeric vector
      * @param array $v2 second numeric vector
      *
-     * @throws \PEAR2\Math\Distance\Exception if vectors are not numeric or dissimilar size
+     * @throws Math\Distance\Exception if vectors are not numeric or dissimilar size
      * @return boolean true if vectors are of same size, false if not
      *
      */
@@ -53,16 +53,20 @@ class Distance
     {
     	$f_num = function ($v, $k) {
     		if (!is_numeric($v)) {
-    			throw new \PEAR2\Math\Distance\Exception('Vectors must contain numeric data, non-numeric item found: '.$v);
+    			throw new Math\Distance\NonNumericException(
+                  'Vectors must contain numeric data, non-numeric item found: '.$v
+                );
     		}
-    	}
+    	};
     	// check that each vector member is of numeric type
     	array_walk($v1, $f_num);
     	array_walk($v2, $f_num);
 
     	// check it both vectors have the same size
         if (count($v1) != count($v2)) {
-            throw new \PEAR2\Math\Distance\Exception('Vectors must be of equal size: n1='.count($v1).', n2='.count($v2));
+            throw new Math\Distance\IncompatibleItemsException(
+              'Vectors must be of equal size: n1='.count($v1).', n2='.count($v2)
+            );
         } else {
             return true;
         }
@@ -82,11 +86,11 @@ class Distance
      * @param array $v1 first vector
      * @param array $v2 second vector
      *
-     * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+     * @throws Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Euclidean distance between v1 and v2
      * @see _compatibleData()
      *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws \PEAR2\Math\Distance\Exception
+     * @assert (array(1,2,3), array(1,2,3,4)) throws Math\Distance\Exception
      * @assert (array(1,2), array(3,4)) == sqrt(8)
      * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
      *
@@ -128,11 +132,11 @@ class Distance
      * @param array  $v2	second vector
      * @param double $order	the Lp metric
      *
-     * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+     * @throws Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Minkowski distance of the given order between v1 and v2
      * @see _compatibleData()
      *
-     * @assert (array(1,2,3), array(1,2,3,4), 2) throws \PEAR2\Math\Distance\Exception
+     * @assert (array(1,2,3), array(1,2,3,4), 2) throws Math\Distance\Exception
      * @assert (array(3,4,2,1), array(0,5,6,9), 3) == pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),1/3)
      * @assert (array(3,4,2,1), array(0,5,6,9), 4.2) == pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),1/4.2)
      *
@@ -140,7 +144,7 @@ class Distance
     public static function minkowski(array $v1, array $v2, $order=0)
     {
         if (0 == $order) {
-            throw new \PEAR2\Math\Distance\Exception('Minkowski distance order cannot be zero');
+            throw new Math\Distance\Exception('Minkowski distance order cannot be zero');
         } elseif (1 == $order) {
             return Distance::manhattan($v1, $v2);
         } elseif (2 == $order) {
@@ -176,11 +180,11 @@ class Distance
      * @param array $v1 first vector
      * @param array $v2 second vector
      *
-     * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+     * @throws Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Manhattan distance between v1 and v2
      * @see _compatibleData()
      *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws \PEAR2\Math\Distance\Exception
+     * @assert (array(1,2,3), array(1,2,3,4)) throws Math\Distance\Exception
      * @assert (array(3,4,2,1), array(0,5,6,9)) == 16
      * @assert (array(-2,4), array(0,5)) == 3
      *
@@ -212,11 +216,11 @@ class Distance
      * @param array $v1 first vector
      * @param array $v2 second vector
      *
-     * @throws \PEAR2\Math\Distance\Exception if numeric vectors are of different sizes
+     * @throws Math\Distance\Exception if numeric vectors are of different sizes
      * @return double The Chebyshev distance between v1 and v2
      * @see _compatibleData()
      *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws \PEAR2\Math\Distance\Exception
+     * @assert (array(1,2,3), array(1,2,3,4)) throws Math\Distance\Exception
      * @assert (array(3,4,2,1), array(0,5,6,9)) == 8
      * @assert (array(-2,4), array(0,5)) == 2
      *
@@ -246,10 +250,10 @@ class Distance
      * @param string $s1 first string
      * @param string $s2 second string
      *
-     * @throws \PEAR2\Math\Distance\Exception if parameters are not strings of the same length
+     * @throws Math\Distance\Exception if parameters are not strings of the same length
      * @return integer the hamming length from s1 to s2
      *
-     * @assert ('australopitecus', 'bird') throws \PEAR2\Math\Distance\Exception
+     * @assert ('australopitecus', 'bird') throws Math\Distance\Exception
      * @assert ('1011101', '1001001') == 2
      * @assert ('chemistry', 'dentistry') == 4
      *
@@ -260,9 +264,7 @@ class Distance
             $res = array_diff_assoc(str_split($s1), str_split($s2));
             return count($res);
         } else {
-            throw \PEAR2\Math\Distance\Exception('Expecting two strings of equal length');
-        }
+            throw Math\Distance\IncompatibleItemsException('Expecting two strings of equal length');
+        };
     }
 }
-
-?>
