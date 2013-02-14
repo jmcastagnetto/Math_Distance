@@ -1,0 +1,17 @@
+{
+    "name": "jmcastagnetto/math_distance",
+    "description": "Class that implements static functions to calculate distance metrics",
+    "authors": [
+        {
+            "name": "Jesus M. Castagnetto",
+            "email": "jesus@castagnetto.com"
+        }
+    ],
+    "minimum-stability": "dev",
+	"autoload" : {
+		"psr-0": {"Math\Distance": "src/"}
+	},
+    "require": {
+
+    }
+}
