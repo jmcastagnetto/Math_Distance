@@ -51,18 +51,16 @@ class Distance
      */
     private static function _compatibleData(array $v1, array $v2)
     {
-        // check that each vector member is of numeric type
-        foreach ($v1 as $item) {
-            if (!is_numeric($item)) {
-                throw new \PEAR2\Math\Distance\Exception('Vectors must contain numeric data, non-numeric item found: '.$item);
-            }
-        }
-        foreach ($v2 as $item) {
-            if (!is_numeric($item)) {
-                throw new \PEAR2\Math\Distance\Exception('Vectors must contain numeric data, non-numeric item found: '.$item);
-            }
-        }
-        // check it both vectors have the same size
+    	$f_num = function ($v, $k) {
+    		if (!is_numeric($v)) {
+    			throw new \PEAR2\Math\Distance\Exception('Vectors must contain numeric data, non-numeric item found: '.$v);
+    		}
+    	}
+    	// check that each vector member is of numeric type
+    	array_walk($v1, $f_num);
+    	array_walk($v2, $f_num);
+
+    	// check it both vectors have the same size
         if (count($v1) != count($v2)) {
             throw new \PEAR2\Math\Distance\Exception('Vectors must be of equal size: n1='.count($v1).', n2='.count($v2));
         } else {
@@ -251,7 +249,7 @@ class Distance
      * @throws \PEAR2\Math\Distance\Exception if parameters are not strings of the same length
      * @return integer the hamming length from s1 to s2
      *
-     * @assert ('australopitecus', 'bird' throws \PEAR2\Math\Distance\Exception
+     * @assert ('australopitecus', 'bird') throws \PEAR2\Math\Distance\Exception
      * @assert ('1011101', '1001001') == 2
      * @assert ('chemistry', 'dentistry') == 4
      *

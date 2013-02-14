@@ -1,6 +1,10 @@
 <?php
 namespace PEAR2\Math;
 
+$current_path='/home/jesus/devel/jmc/github/PEAR2_Math_Distance';
+require_once $current_path.'/src/Math/Distance.php';
+require_once $current_path.'/src/Math/Distance/Exception.php';
+
 use PEAR2\Math\Distance;
 use PEAR2\Math\Distance\Exception;
 
