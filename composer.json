@@ -9,7 +9,7 @@
     ],
     "minimum-stability": "dev",
 	"autoload" : {
-		"psr-0": {"Math\Distance": "src/"}
+		"psr-0": {"Math": "src/"}
 	},
     "require": {
 
