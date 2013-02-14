@@ -3,3 +3,7 @@
 *.swp
 .project
 .settings
+/vendor/
+vendor/
+vendor/*
+composer.lock
