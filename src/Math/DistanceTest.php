@@ -94,7 +94,7 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
     public function testMinkowski3()
     {
         $this->assertEquals(
-          pow(pow(3,3)+pow(-1,3)+pow(-4,3)+pow(-8,3),1/4),
+          pow(pow(3,4)+pow(1,4)+pow(4,4)+pow(8,4),1/4),
           Math\Distance::minkowski(array(0,5,6,9), array(3,4,2,1), 4)
         );
     }

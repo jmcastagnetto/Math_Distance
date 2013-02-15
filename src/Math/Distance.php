@@ -158,7 +158,7 @@ class Distance
                 $n = count($v1);
                 $sum = 0;
                 for ($i=0; $i < $n; $i++) {
-                    $sum += pow(($v1[$i] - $v2[$i]), $order);
+                    $sum += pow(abs($v1[$i] - $v2[$i]), $order);
                 }
                 return pow($sum, 1/$order);
             }
