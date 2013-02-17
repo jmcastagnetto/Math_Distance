@@ -22,11 +22,11 @@ namespace Math;
  *
  * $v1 = array(0,2,4,5);
  * $v2 = array(1,4,7,2);
- * $e = \Math\Distance::euclidean($v1, $v2);
- * $m = \Math\Distance::minkowski($v1, $v2);
- * $t = \Math\Distance::manhattan($v1, $v2);
- * $c = \Math\Distance::chebyshev($v1, $v2);
- * $s = \Math\Distance::hamming('1011101','1001001');
+ * $e = Math\Distance::euclidean($v1, $v2);
+ * $m = Math\Distance::minkowski($v1, $v2);
+ * $t = Math\Distance::manhattan($v1, $v2);
+ * $c = Math\Distance::chebyshev($v1, $v2);
+ * $s = Math\Distance::hamming('1011101','1001001');
  *
  * @category  Math
  * @package   Math_Distance
@@ -93,6 +93,7 @@ class Distance
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
+     * @assert (array(2,'a',6,7), array(4,5,1,9)) throws Distance\NonNumericException
      * @assert (array(1,2), array(3,4)) == sqrt(8)
      * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
      *
@@ -140,6 +141,8 @@ class Distance
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4), 2) throws Distance\IncompatibleItemsException
+     * @assert (array(0,5,6,9), array(3,4,2,1), 0) throws Distance\Exception
+     * @assert (array(0,5,6,9), array(3,4,2,1), 1) == 16
      * @assert (array(0,5,6,9), array(3,4,2,1), 3) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/3)
      * @assert (array(0,5,6,9), array(3,4,2,1), 4) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/4)
      *
@@ -220,7 +223,7 @@ class Distance
      * @param array $v1 first vector
      * @param array $v2 second vector
      *
-     * @throws Distance\Exception if numeric vectors are of different sizes
+     * @throws Distance\IncompatibleItemsException if numeric vectors are of different sizes
      * @throws Distance\NonNumericException if vectors are not numeric
      * @return double The Chebyshev distance between v1 and v2
      * @see _compatibleData()
