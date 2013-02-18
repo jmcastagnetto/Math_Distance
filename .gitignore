@@ -10,3 +10,5 @@ composer.lock
 *.s[ow]p
 *.phar
 *.tgz
+local
+local/*
