@@ -1,4 +1,5 @@
 <?php
+// this can be run after Composer have generated the autoload
 require "../vendor/autoload.php";
 
 $v1 = array(0,2,1);
@@ -13,7 +14,5 @@ echo "Chebyshev distance: $chebyshev\n";
 $minkowski = Math\Distance::minkowski($v2, $v1, 3);
 echo "Minkowski distance (order=3): $minkowski\n";
 
-$s1 = 'electric';
-$s2 = 'tectonic';
-$hamming = Math\Distance::hamming($s1, $s2);
+$hamming = Math\Distance::hamming('electric', 'tectonic');
 echo "Hamming distance: $hamming\n";
