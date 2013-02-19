@@ -232,7 +232,6 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
      * Generated from @assert ('1011101', '1001001') == 2.
      *
      * @covers Math\Distance::hamming
-     * @covers Math\Distance::_compatibleData
      */
     public function testHamming2()
     {
@@ -246,7 +245,6 @@ class DistanceTest extends \PHPUnit_Framework_TestCase
      * Generated from @assert ('chemistry', 'dentistry') == 4.
      *
      * @covers Math\Distance::hamming
-     * @covers Math\Distance::_compatibleData
      */
     public function testHamming3()
     {
