@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit boostrap='tests/Math/boostrap.php' colors='true'>
+	<testsuites>
+		<testsuite name='Math\Distance test suite'>
+			<file>src/Math/DistanceTest.php</file>
+		</testsuite>
+	</testsuites>
+	<logging>
+		<log type='coverage-html' target='local/report' charset='UTF-8'
+			highlight="true" />
+		<log type='testdox-html' target='local/testdox.html' />
+		<log type='tap' target='local/logfile.tap' />
+	</logging>
+</phpunit>
