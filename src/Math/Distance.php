@@ -24,7 +24,7 @@ namespace Math;
  * $v2 = array(1,4,7,2);
  * $m = new Math\Distance();
  * $e = $m->euclidean($v1, $v2);
- * $m = $m->minkowski($v1, $v2);
+ * $m = $m->minkowski(4, $v1, $v2);
  * $t = $m->manhattan($v1, $v2);
  * $c = $m->chebyshev($v1, $v2);
  * $s = $m->hamming('1011101','1001001');
@@ -44,7 +44,7 @@ class Distance
     private $v1;
     private $v2;
 
-    public function __construct($v1, $v2) {
+    public function __construct($v1=null, $v2=null) {
         $this->setData($v1, $v2);
     }
 
@@ -63,7 +63,7 @@ class Distance
      * @param $v1 first numeric vector or string
      * @param $v2 second numeric vector or string
      *
-     * @throws Distance\Exception if parameters are not vectors or strings
+     * @throws Distance\Distance\Exception if parameters are not vectors or strings
      * @throws Distance\NonNumericException if vectors are not numeric
      * @throws Distance\ImcompatibleItemsException if vectors or strings are of dissimilar size
      * @return boolean true if vectors or strings are of same size
@@ -100,7 +100,7 @@ class Distance
                 );
             }
         } else {
-            throw new Distance\Execption(
+            throw new Distance\Exception(
                 "Expecting two arrays of numbers or two strings"
             );
         }
@@ -114,10 +114,10 @@ class Distance
             } elseif ($type === 'string') {
                 return is_string($this->v1) && is_string($this->v2);
             } else {
-                throw new Exception("Invalid data: incompatible types");
+                throw new Distance\Exception("Invalid data: incompatible types");
             }
         } else {
-            throw new Exception("Invalid data: not set or null");
+            throw new Distance\Exception("Invalid data: not set or null");
         }
     }
 
@@ -145,8 +145,9 @@ class Distance
      * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
      *
      */
-    public function euclidean()
+    public function euclidean(array $v1=null, array $v2=null)
     {
+        $this->setData($v1, $v2);
         if ($this->validData()) {
             $n = count($this->v1);
             $sum = 0;
@@ -179,9 +180,9 @@ class Distance
      * - http://xlinux.nist.gov/dads/HTML/lmdistance.html
      * - http://goo.gl/AktXh (Article at code10.info)
      *
+     * @param double $order	the Lp metric
      * @param array  $v1	first vector
      * @param array  $v2	second vector
-     * @param double $order	the Lp metric
      *
      * @throws Distance\NonNumericException if vectors are not numeric
      * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
@@ -189,22 +190,23 @@ class Distance
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4), 2) throws Distance\IncompatibleItemsException
-     * @assert (array(0,5,6,9), array(3,4,2,1), 0) throws Distance\Exception
+     * @assert (array(0,5,6,9), array(3,4,2,1), 0) throws Distance\Distance\Exception
      * @assert (array(0,5,6,9), array(3,4,2,1), 1) == 16
      * @assert (array(0,5,6,9), array(3,4,2,1), 3) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/3)
      * @assert (array(0,5,6,9), array(3,4,2,1), 4) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/4)
      *
      */
-    public function minkowski($order=0)
+    public function minkowski($order=0, array $v1=null, array $v2=null)
     {
-        if (0 == $order) {
+        if (0 === $order) {
             throw new Distance\Exception('Minkowski distance order cannot be zero');
-        } elseif (1 == $order) {
-            return $this->manhattan();
-        } elseif (2 == $order) {
-            return $this->euclidean();
+        } elseif (1 === $order) {
+            return $this->manhattan($v1, $v2);
+        } elseif (2 === $order) {
+            return $this->euclidean($v1, $v2);
         } else {
             $order = (double) $order;
+            $this->setData($v1, $v2);
             if ($this->validData()) {
                 $n = count($this->v1);
                 $sum = 0;
@@ -244,8 +246,9 @@ class Distance
      * @assert (array(-2,4), array(0,5)) == 3
      *
      */
-    public function manhattan()
+    public function manhattan(array $v1=null, array $v2=null)
     {
+        $this->setData($v1, $v2);
         if ($this->validData()) {
             $n = count($this->v1);
             $sum = 0;
@@ -281,8 +284,9 @@ class Distance
      * @assert (array(-2,4), array(0,5)) == 2
      *
      */
-    public function chebyshev()
+    public function chebyshev(array $v1=null, array $v2=null)
     {
+        $this->setData($v1, $v2);
         if ($this->validData()) {
             $n = count($this->v1);
             $diffvals = array();
@@ -314,13 +318,12 @@ class Distance
      * @assert ('chemistry', 'dentistry') == 4
      *
      */
-    public function hamming()
+    public function hamming($v1=null, $v2=null)
     {
+        $this->setData($v1, $v2);
         if ($this->validData('string')) {
             $res = array_diff_assoc(str_split($this->v1), str_split($this->v2));
             return count($res);
-        } else {
-            throw new Distance\IncompatibleItemsException('Expecting two strings of equal length');
-        };
+        }
     }
 }
