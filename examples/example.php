@@ -12,7 +12,7 @@ $manhattan = $m->manhattan();
 echo "Manhattan distance: $manhattan\n";
 $chebyshev = $m->chebyshev();
 echo "Chebyshev distance: $chebyshev\n";
-$minkowski = $m->minkowski($v1, $v2, 3);
+$minkowski = $m->minkowski(3);
 echo "Minkowski distance (order=3): $minkowski\n";
 
 $m->setData('electric', 'tectonic');
