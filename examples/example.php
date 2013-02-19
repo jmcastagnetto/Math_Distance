@@ -14,7 +14,8 @@ $chebyshev = $m->chebyshev();
 echo "Chebyshev distance: $chebyshev\n";
 $minkowski = $m->minkowski(3);
 echo "Minkowski distance (order=3): $minkowski\n";
+echo $m->minkowski( 1, array( 3,4,2,1), array( 0,5,6,9));
 
-$m->setData('electric', 'tectonic');
-$hamming = $m->hamming();
+//$m->setData('electric', 'tectonic');
+$hamming = $m->hamming('electric', 'tectonic');
 echo "Hamming distance: $hamming\n";
