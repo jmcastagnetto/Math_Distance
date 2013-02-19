@@ -44,7 +44,7 @@ class Distance
     private $v1;
     private $v2;
 
-    public function __construct($v1=null, $v2=null) {
+    public function __construct($v1, $v2) {
         $this->setData($v1, $v2);
     }
 
@@ -54,6 +54,7 @@ class Distance
             $this->v1 = $v1;
             $this->v2 = $v2;
         }
+        return $this;
     }
 
     /**
@@ -144,9 +145,8 @@ class Distance
      * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
      *
      */
-    public function euclidean($v1=null, $v2=null)
+    public function euclidean()
     {
-        $this->setData($v1,$v2);
         if ($this->validData()) {
             $n = count($this->v1);
             $sum = 0;
@@ -195,22 +195,21 @@ class Distance
      * @assert (array(0,5,6,9), array(3,4,2,1), 4) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/4)
      *
      */
-    public function minkowski($v1=null, $v2=null, $order=0)
+    public function minkowski($order=0)
     {
         if (0 == $order) {
             throw new Distance\Exception('Minkowski distance order cannot be zero');
         } elseif (1 == $order) {
-            return $this->manhattan($v1, $v2);
+            return $this->manhattan();
         } elseif (2 == $order) {
-            return $this->euclidean($v1, $v2);
+            return $this->euclidean();
         } else {
-            $this->setData($v1,$v2);
             $order = (double) $order;
             if ($this->validData()) {
-                $n = count($v1);
+                $n = count($this->v1);
                 $sum = 0;
                 for ($i=0; $i < $n; $i++) {
-                    $sum += pow(abs($v1[$i] - $v2[$i]), $order);
+                    $sum += pow(abs($this->v1[$i] - $this->v2[$i]), $order);
                 }
                 return pow($sum, 1/$order);
             }
@@ -245,14 +244,13 @@ class Distance
      * @assert (array(-2,4), array(0,5)) == 3
      *
      */
-    public function manhattan($v1=null, $v2=null)
+    public function manhattan()
     {
-        $this->setData($v1,$v2);
         if ($this->validData()) {
-            $n = count($v1);
+            $n = count($this->v1);
             $sum = 0;
             for ($i=0; $i < $n; $i++) {
-                $sum += abs($v1[$i] - $v2[$i]);
+                $sum += abs($this->v1[$i] - $this->v2[$i]);
             }
             return $sum;
         }
@@ -283,14 +281,13 @@ class Distance
      * @assert (array(-2,4), array(0,5)) == 2
      *
      */
-    public function chebyshev($v1=null, $v2=null)
+    public function chebyshev()
     {
-        $this->setData($v1,$v2);
         if ($this->validData()) {
-            $n = count($v1);
+            $n = count($this->v1);
             $diffvals = array();
             for ($i=0; $i < $n; $i++) {
-                $diffvals[$i] = abs($v1[$i] - $v2[$i]);
+                $diffvals[$i] = abs($this->v1[$i] - $this->v2[$i]);
             }
             return max($diffvals);
         }
@@ -317,11 +314,10 @@ class Distance
      * @assert ('chemistry', 'dentistry') == 4
      *
      */
-    public function hamming($v1=null, $v2=null)
+    public function hamming()
     {
-        $this->setData($v1,$v2);
         if ($this->validData('string')) {
-            $res = array_diff_assoc(str_split($v1), str_split($v2));
+            $res = array_diff_assoc(str_split($this->v1), str_split($this->v2));
             return count($res);
         } else {
             throw new Distance\IncompatibleItemsException('Expecting two strings of equal length');
