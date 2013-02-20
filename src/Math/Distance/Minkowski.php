@@ -73,7 +73,8 @@ class Minkowski extends Algorithm
     public function distance($v1, $v2)
     {
         if (in_array($this->_algo, array("Euclidean", "Manhattan"))) {
-            $d = new $this->_algo;
+            $class = 'Math\\Distance\\'.$this->_algo;
+            $d = new $class;
             return $d->distance($v1, $v2);
         } else{
             $n = count($v1);
