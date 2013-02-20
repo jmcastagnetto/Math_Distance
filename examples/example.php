@@ -17,6 +17,12 @@ echo "Chebyshev distance: $chebyshev\n";
 $minkowski = $m->algorithm(new Math\Distance\Minkowski(3))
                ->data($v1, $v2)->distance();
 echo "Minkowski distance (order=3): $minkowski\n";
+$minkowski = $m->algorithm(new Math\Distance\Minkowski(2))
+               ->data($v1, $v2)->distance();
+echo "Minkowski distance (order=2): $minkowski\n";
+$minkowski = $m->algorithm(new Math\Distance\Minkowski(1))
+               ->data($v1, $v2)->distance();
+echo "Minkowski distance (order=1): $minkowski\n";
 
 $hamming = $m->algorithm(new Math\Distance\Hamming())
              ->data('electric', 'tectonic')->distance();
