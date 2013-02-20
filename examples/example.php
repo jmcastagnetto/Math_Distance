@@ -4,18 +4,20 @@ require "../vendor/autoload.php";
 
 $v1 = array(0,2,1);
 $v2 = array(1,4,5);
-$m = new Math\Distance($v1, $v2);
+$m = new Math\Distance(new Math\Distance\Euclidean());
 
-$euclidean = $m->euclidean();
+$euclidean = $m->setData($v1, $v2)->distance();
 echo "Euclidean distance: $euclidean\n";
-$manhattan = $m->manhattan();
+$manhattan = $m->setAlgorithm(new Math\Distance\Manhattan())
+               ->setData($v1, $v2)->distance();
 echo "Manhattan distance: $manhattan\n";
-$chebyshev = $m->chebyshev();
+$chebyshev = $m->setAlgorithm(new Math\Distance\Chebyshev())
+               ->setData($v1, $v2)->distance();
 echo "Chebyshev distance: $chebyshev\n";
-$minkowski = $m->minkowski(3);
+$minkowski = $m->setAlgorithm(new Math\Distance\Minkowski(3))
+               ->setData($v1, $v2)->distance();
 echo "Minkowski distance (order=3): $minkowski\n";
-echo $m->minkowski( 1, array( 3,4,2,1), array( 0,5,6,9));
 
-//$m->setData('electric', 'tectonic');
-$hamming = $m->hamming('electric', 'tectonic');
+$hamming = $m->setAlgorithm(new Math\Distance\Hamming())
+             ->setData('electric', 'tectonic')->distance();
 echo "Hamming distance: $hamming\n";
