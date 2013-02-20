@@ -4,8 +4,23 @@ namespace Math\Distance;
 
 abstract class Algorithm
 {
+    /**
+     * Abstract method to calculate the distance metric
+     *
+     * @param mixed $v1
+     * @param mixed $v2
+     */
     abstract function distance($v1, $v2);
 
+    /**
+     * Validates if the parameters are of the expected type and compatibility
+     *
+     * @param array $v1
+     * @param array $v2
+     *
+     * @throws NonNumericException if the arrays are not numeric
+     * @throws IncompatibleItemsException if the arrays are not of the same size
+     */
     public function validParameters(array $v1, array $v2) {
          $f_num = function ($v, $k) {
             if (!is_numeric($v)) {

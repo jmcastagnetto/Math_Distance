@@ -1,7 +1,11 @@
 <?php
-
 namespace Math\Distance;
 
+/**
+ * Class: Minkowski
+ *
+ * @see Algorithm
+ */
 class Minkowski extends Algorithm
 {
     private $_order;
@@ -11,9 +15,16 @@ class Minkowski extends Algorithm
         $this->order($order);
     }
 
+    /**
+     * order
+     *
+     * @param numeric $order
+     */
     public function order($order) {
         if ( $order === 0 ) {
-            throw new Exception('Minkowski distance order cannot be zero');
+            throw new OrderOutOfBoundsException(
+                'Minkowski distance order cannot be zero'
+            );
         } elseif ( $order === 1 ) {
             $this->_algo = "Manhattan";
         } elseif ( $order === 2 ) {

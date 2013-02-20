@@ -2,6 +2,11 @@
 
 namespace Math\Distance;
 
+/**
+ * Class: Chebyshev
+ *
+ * @see Algorithm
+ */
 class Chebyshev extends Algorithm
 {
     /**
@@ -19,15 +24,9 @@ class Chebyshev extends Algorithm
      * @param array $v1 first vector
      * @param array $v2 second vector
      *
-     * @throws Distance\IncompatibleItemsException if numeric vectors are of different sizes
-     * @throws Distance\NonNumericException if vectors are not numeric
+     * @throws IncompatibleItemsException if numeric vectors are of different sizes
+     * @throws NonNumericException if vectors are not numeric
      * @return double The Chebyshev distance between v1 and v2
-     * @see _compatibleData()
-     *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
-     * @assert (array(3,4,2,1), array(0,5,6,9)) == 8
-     * @assert (array(-2,4), array(0,5)) == 2
-     *
      */
     public function distance($v1, $v2)
     {
