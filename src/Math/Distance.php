@@ -1,11 +1,11 @@
 <?php
 namespace Math;
 /**
- * Math_Distance
+ * Math\Distance
  *
  * @category  Math
- * @package   Math_Distance
- * @author    Jesus M. Castagnetto <jmcastagnetto@php.net>
+ * @package   Math\Distance
+ * @author    Jesus M. Castagnetto <jesus@castagnetto.com>
  * @copyright 2011-2013 Jesús M. Castagnetto
  * @license   http://opensource.org/licenses/bsd-license.php New BSD License
  * @version   1.0.0
@@ -14,23 +14,30 @@ namespace Math;
  */
 
 /**
- * Class to calculate common distance metrics
+ * Package to calculate distance metrics
  *
  * It implements methods to compute vector distance metrics
  * (Euclidean, Minkowski, Manhattan and Chebyshev) as well as
- * a string distance metric (Hamming)
+ * string distance metric (Hamming)
  *
- * $v1 = array(0,2,4,5);
- * $v2 = array(1,4,7,2);
- * $e = Math\Distance::euclidean($v1, $v2);
- * $m = Math\Distance::minkowski($v1, $v2);
- * $t = Math\Distance::manhattan($v1, $v2);
- * $c = Math\Distance::chebyshev($v1, $v2);
- * $s = Math\Distance::hamming('1011101','1001001');
+ * require "../vendor/autoload.php";
+ *
+ * $v1 = array(0,2,1);
+ * $v2 = array(1,4,5);
+ * $m = new Math\Distance(new Math\Distance\Euclidean());
+ * $euclidean = $m->data($v1, $v2)->distance();
+ * $manhattan = $m->algorithm(new Math\Distance\Manhattan())
+ *                ->data($v1, $v2)->distance();
+ * $chebyshev = $m->algorithm(new Math\Distance\Chebyshev())
+ *                ->data($v1, $v2)->distance();
+ * $minkowski = $m->algorithm(new Math\Distance\Minkowski(3))
+ *                ->data($v1, $v2)->distance();
+ * $hamming = $m->algorithm(new Math\Distance\Hamming())
+ *              ->data('1011101', '1001001')->distance();
  *
  * @category  Math
- * @package   Math_Distance
- * @author    Jesus M. Castagnetto <jmcastagnetto@php.net>
+ * @package   Math\Distance
+ * @author    Jesus M. Castagnetto <jesus@castagnetto.com>
  * @copyright 2011-2013 Jesús M. Castagnetto
  * @license   http://opensource.org/licenses/bsd-license.php New BSD License
  * @link      http://github.com/jmcastagnetto/Math_Distance
@@ -39,240 +46,51 @@ namespace Math;
  */
 class Distance
 {
-    /**
-     * Private method to check whether we got numeric vectors of identical size
-     *
-     * @param array $v1 first numeric vector
-     * @param array $v2 second numeric vector
-     *
-     * @throws Distance\NonNumericException if vectors are not numeric
-     * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
-     * @return boolean true if vectors are of same size, false if not
-     *
-     */
-    private static function _compatibleData(array $v1, array $v2)
-    {
-    	$f_num = function ($v, $k) {
-    		if (!is_numeric($v)) {
-    			throw new Distance\NonNumericException(
-                  'Vectors must contain numeric data, non-numeric item found: '.$v
-                );
-    		}
-    	};
-    	// check that each vector member is of numeric type
-    	array_walk($v1, $f_num);
-    	array_walk($v2, $f_num);
 
-    	// check it both vectors have the same size
-        if (count($v1) != count($v2)) {
-            throw new Distance\IncompatibleItemsException(
-              'Vectors must be of equal size: n1='.count($v1).', n2='.count($v2)
-            );
-        } else {
-            return true;
+    protected $v1;
+    protected $v2;
+    protected $algo;
+
+    /**
+     * Constructor for Math\Distance
+     *
+     * @param Distance\Algorithm $algo
+     */
+    public function __construct(Distance\Algorithm $algo) {
+        $this->algorithm($algo);
+    }
+
+    /**
+     * Sets the distance algorithm to be used
+     *
+     * @param Distance\Algorithm $algo
+     */
+    public function algorithm(Distance\Algorithm $algo){
+        $this->algo = $algo;
+        return $this;
+    }
+
+    /**
+     * Validates and sets the data (vectors or strings)
+     *
+     * @param mixed $v1
+     * @param mixed $v2
+     */
+    public function data($v1, $v2) {
+        if (!is_null($v1) && !is_null($v2)
+            && $this->algo->validParameters($v1, $v2)) {
+            $this->v1 = $v1;
+            $this->v2 = $v2;
         }
-
+        return $this;
     }
 
     /**
-     * Euclidean distance metric between two vectors
-     *
-     * The euclidean distance between two vectors (v1, v2) is defined as
-     * D = SQRT(SUM((v1(i) - v2(i))^2))  (i = 0..k)
-     *
-     * Refs:
-     * - http://mathworld.wolfram.com/EuclideanMetric.html
-     * - http://en.wikipedia.org/wiki/Euclidean_distance
-     *
-     * @param array $v1 first vector
-     * @param array $v2 second vector
-     *
-     * @throws Distance\NonNumericException if vectors are not numeric
-     * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
-     * @return double The Euclidean distance between v1 and v2
-     * @see _compatibleData()
-     *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
-     * @assert (array(2,'a',6,7), array(4,5,1,9)) throws Distance\NonNumericException
-     * @assert (array(1,2), array(3,4)) == sqrt(8)
-     * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
+     * Calls the appropriate algorithm to calculate the distance metric
      *
      */
-    public static function euclidean(array $v1, array $v2)
-    {
-        if (Distance::_compatibleData($v1, $v2)) {
-            $n = count($v1);
-            $sum = 0;
-            for ($i=0; $i < $n; $i++) {
-                $sum += ($v1[$i] - $v2[$i]) * ($v1[$i] - $v2[$i]);
-            }
-            return sqrt($sum);
-        }
+    public function distance() {
+        return $this->algo->distance($this->v1, $this->v2);
     }
 
-    /**
-     * Minkowski distance metric between two vectors
-     *
-     * The Minkowski distance is a generalization of the a metric in
-     * Euclidean space and includes as special cases the Euclidean,
-     * Manhattan and Chebyshev distances.
-     *
-     * It is also known as the Lp metric (where p is the metric order)
-     *
-     * This distance is defined as
-     * D = (SUM((v1(i) - v2(i))^p))^(1/p) (i = 0..k)
-     * where: p = 1..n
-     * when p = 1 => reduces to the Manhattan distance
-     * when p = 2 => reduces to the Euclidean distance
-     * when p -> infinite => reduces to the Chebyshev distance
-     *
-     * Refs:
-     * - http://en.wikipedia.org/wiki/Minkowski_distance
-     * - http://xlinux.nist.gov/dads/HTML/lmdistance.html
-     * - http://goo.gl/AktXh (Article at code10.info)
-     *
-     * @param array  $v1	first vector
-     * @param array  $v2	second vector
-     * @param double $order	the Lp metric
-     *
-     * @throws Distance\NonNumericException if vectors are not numeric
-     * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
-     * @return double The Minkowski distance of the given order between v1 and v2
-     * @see _compatibleData()
-     *
-     * @assert (array(1,2,3), array(1,2,3,4), 2) throws Distance\IncompatibleItemsException
-     * @assert (array(0,5,6,9), array(3,4,2,1), 0) throws Distance\Exception
-     * @assert (array(0,5,6,9), array(3,4,2,1), 1) == 16
-     * @assert (array(0,5,6,9), array(3,4,2,1), 3) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/3)
-     * @assert (array(0,5,6,9), array(3,4,2,1), 4) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/4)
-     *
-     */
-    public static function minkowski(array $v1, array $v2, $order=0)
-    {
-        if (0 == $order) {
-            throw new Distance\Exception('Minkowski distance order cannot be zero');
-        } elseif (1 == $order) {
-            return Distance::manhattan($v1, $v2);
-        } elseif (2 == $order) {
-            return Distance::euclidean($v1, $v2);
-        } else {
-            $order = (double) $order;
-            if (Distance::_compatibleData($v1, $v2)) {
-                $n = count($v1);
-                $sum = 0;
-                for ($i=0; $i < $n; $i++) {
-                    $sum += pow(abs($v1[$i] - $v2[$i]), $order);
-                }
-                return pow($sum, 1/$order);
-            }
-        }
-    }
-
-    /**
-     * Manhattan (aka "Taxicab") distance metric between two vectors
-     *
-     * The Manhattan (or Taxicab) distance is defined as the sum of the
-     * absolute differences between the vector coordinates, and akin to
-     * the type of path that one takes when walking around a city block.
-     *
-     * This distance is defined as
-     * D = SUM( ABS(v1(i) - v2(i)) )    (i = 0..k)
-     *
-     * Refs:
-     * - http://en.wikipedia.org/wiki/Manhattan_distance
-     * - http://xlinux.nist.gov/dads/HTML/manhattanDistance.html
-     * - http://mathworld.wolfram.com/TaxicabMetric.html
-     *
-     * @param array $v1 first vector
-     * @param array $v2 second vector
-     *
-     * @throws Distance\NonNumericException if vectors are not numeric
-     * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
-     * @return double The Manhattan distance between v1 and v2
-     * @see _compatibleData()
-     *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
-     * @assert (array(3,4,2,1), array(0,5,6,9)) == 16
-     * @assert (array(-2,4), array(0,5)) == 3
-     *
-     */
-    public static function manhattan($v1, $v2)
-    {
-        if (Distance::_compatibleData($v1, $v2)) {
-            $n = count($v1);
-            $sum = 0;
-            for ($i=0; $i < $n; $i++) {
-                $sum += abs($v1[$i] - $v2[$i]);
-            }
-            return $sum;
-        }
-    }
-
-    /**
-     * Chebyshev distance metric between two vectors
-     *
-     * The Chebyshev distance aka the Maximum metric (L[inf])
-     * is the greatest of their differences along any coordinate.
-     *
-     * This distance is defined as
-     * D = MAX( ABS(v1(i) - v2(i)) )  (i = 0..k)
-     *
-     * Refs:
-     * - http://en.wikipedia.org/wiki/Chebyshev_distance
-     *
-     * @param array $v1 first vector
-     * @param array $v2 second vector
-     *
-     * @throws Distance\IncompatibleItemsException if numeric vectors are of different sizes
-     * @throws Distance\NonNumericException if vectors are not numeric
-     * @return double The Chebyshev distance between v1 and v2
-     * @see _compatibleData()
-     *
-     * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
-     * @assert (array(3,4,2,1), array(0,5,6,9)) == 8
-     * @assert (array(-2,4), array(0,5)) == 2
-     *
-     */
-    public static function chebyshev(array $v1, array $v2)
-    {
-        if (Distance::_compatibleData($v1, $v2)) {
-            $n = count($v1);
-            $diffvals = array();
-            for ($i=0; $i < $n; $i++) {
-                $diffvals[$i] = abs($v1[$i] - $v2[$i]);
-            }
-            return max($diffvals);
-        }
-    }
-
-    /**
-     * Hamming distance between two strings
-     *
-     * The Hamming distance is defined as the number of positions
-     * at which two strings of equal lenght differ
-     *
-     * Refs:
-     * - http://mathworld.wolfram.com/HammingDistance.html
-     * - http://en.wikipedia.org/wiki/Hamming_distance
-     *
-     * @param string $s1 first string
-     * @param string $s2 second string
-     *
-     * @throws Distance\IncompatibleItemsException if parameters are not strings of the same length
-     * @return integer the hamming length from s1 to s2
-     *
-     * @assert ('australopitecus', 'bird') throws Distance\IncompatibleItemsException
-     * @assert ('1011101', '1001001') == 2
-     * @assert ('chemistry', 'dentistry') == 4
-     *
-     */
-    public static function hamming($s1, $s2)
-    {
-        if ((is_string($s1) && is_string($s2)) && (strlen($s1) == strlen($s2))) {
-            $res = array_diff_assoc(str_split($s1), str_split($s2));
-            return count($res);
-        } else {
-            throw new Distance\IncompatibleItemsException('Expecting two strings of equal length');
-        };
-    }
 }

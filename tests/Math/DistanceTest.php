@@ -4,253 +4,202 @@
  */
 class DistanceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
+
     protected function setUp()
     {
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
     protected function tearDown()
     {
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws Math\Distance\IncompatibleItemsException.
-     *
-     * @covers Math\Distance::euclidean
-     * @covers Math\Distance::_compatibleData
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Euclidean
      * @expectedException Math\Distance\IncompatibleItemsException
+     */
+    public function testIncompatibleItemsException()
+    {
+        $e = new Math\Distance\Euclidean();
+        $e->validParameters(array(1,2,3), array(1,2,3,4));
+    }
+
+    /**
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Euclidean
      */
     public function testEuclidean()
     {
-        Math\Distance::euclidean(array(1,2,3), array(1,2,3,4));
-    }
-
-    /**
-     * Generated from @assert (array(1,2), array(3,4)) == sqrt(8).
-     *
-     * @covers Math\Distance::euclidean
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testEuclidean2()
-    {
-        $this->assertEquals(
-          sqrt(8),
-          Math\Distance::euclidean(array(1,2), array(3,4))
-        );
-    }
-
-    /**
-     * Generated from @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4).
-     *
-     * @covers Math\Distance::euclidean
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testEuclidean3()
-    {
+        $d = new Math\Distance(new Math\Distance\Euclidean());
         $this->assertEquals(
           sqrt(4+1+25+4),
-          Math\Distance::euclidean(array(2,4,6,7), array(4,5,1,9))
+          $d->data(array(2,4,6,7), array(4,5,1,9))->distance()
+        );
+    }
+
+
+    /**
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance::algorithm
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Euclidean
+     * @covers Math\Distance\Manhattan::distance
+     */
+    public function testChangeAlgorithm()
+    {
+        $d = new Math\Distance(new Math\Distance\Euclidean());
+        $d->algorithm(new Math\Distance\Manhattan());
+        $this->assertEquals(
+          16,
+          $d->data(array(3,4,2,1), array(0,5,6,9))->distance()
         );
     }
 
     /**
-     * @covers Math\Distance::euclidean
-     * @covers Math\Distance::_compatibleData
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Euclidean
      * @expectedException Math\Distance\NonNumericException
      * @expectedExceptionMessage Vectors must contain numeric data, non-numeric item found: a
      */
-    public function testEuclidean4()
+    public function testValidParameters()
     {
-        Math\Distance::euclidean(array(2,'a',6,7), array(4,5,1,9));
+        $e = new Math\Distance\Euclidean();
+        $e->validParameters(array(2,'a',6,7), array(4,5,1,9));
     }
 
-
-
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4), 2) throws Math\Distance\IncompatibleItemsException.
-     *
-     * @covers Math\Distance::minkowski
-     * @covers Math\Distance::_compatibleData
-     * @expectedException Math\Distance\IncompatibleItemsException
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Minkowski::__construct
+     * @covers Math\Distance\Minkowski::distance
      */
     public function testMinkowski()
     {
-        Math\Distance::minkowski(array(1,2,3), array(1,2,3,4), 2);
-    }
-
-    /**
-     * Generated from @assert (array(0,5,6,9), array(3,4,2,1), 3) == pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),1/3).
-     *
-     * @covers Math\Distance::minkowski
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testMinkowski2()
-    {
+        $d = new Math\Distance(new Math\Distance\Minkowski(3));
         $this->assertEquals(
           pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),(1/3)),
-          Math\Distance::minkowski(array(0,5,6,9), array(3,4,2,1), 3)
+          $d->data(array(0,5,6,9), array(3,4,2,1))->distance()
         );
     }
 
     /**
-     * Generated from @assert (array(0,5,6,9), array(3,4,2,1), 4) == pow(pow(3,3)+pow(1,3)+pow(4,3)+pow(8,3),1/4).
-     *
-     * @covers Math\Distance::minkowski
-     * @covers Math\Distance::_compatibleData
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Minkowski::__construct
+     * @covers Math\Distance\Minkowski::order
+     * @covers Math\Distance\Minkowski::distance
+     * @covers Math\Distance\Euclidean
      */
-    public function testMinkowski3()
+    public function testMinkowskiOrder()
     {
+        $m = new Math\Distance\Minkowski(3);
+        $m->order(2);
+        $d = new Math\Distance($m);
         $this->assertEquals(
-          pow(pow(3,4)+pow(1,4)+pow(4,4)+pow(8,4),1/4),
-          Math\Distance::minkowski(array(0,5,6,9), array(3,4,2,1), 4)
+          sqrt(4+1+25+4),
+          $d->data(array(2,4,6,7), array(4,5,1,9))->distance()
         );
     }
 
     /**
-     * @covers Math\Distance::minkowski
-     * @covers Math\Distance::_compatibleData
-     * @expectedException Math\Distance\Exception
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Minkowski::__construct
+     * @covers Math\Distance\Minkowski::order
+     * @covers Math\Distance\Minkowski::distance
+     * @covers Math\Distance\Manhattan
      */
-    public function testMinkowski4()
+    public function testMinkowskiToManhattan()
     {
-        Math\Distance::minkowski(array(0,5,6,9), array(3,4,2,1), 0);
-    }
-
-
-    /**
-     * @covers Math\Distance::minkowski
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testMinkowski5()
-    {
+        $d = new Math\Distance(new Math\Distance\Minkowski(1));
         $this->assertEquals(
           16,
-          Math\Distance::minkowski(array(3,4,2,1), array(0,5,6,9),1)
+          $d->data(array(3,4,2,1), array(0,5,6,9))->distance()
         );
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws Math\Distance\IncompatibleItemsException.
-     *
-     * @covers Math\Distance::manhattan
-     * @covers Math\Distance::_compatibleData
-     * @expectedException Math\Distance\IncompatibleItemsException
+     * @covers Math\Distance\Minkowski::__construct
+     * @covers Math\Distance\Minkowski::order
+     * @expectedException Math\Distance\OrderOutOfBoundsException
+     */
+    public function testMinkowskiOrderOutOfBoundsException()
+    {
+        $m = new Math\Distance\Minkowski(3);
+        $m->order(0);
+    }
+
+    /**
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Manhattan::distance
      */
     public function testManhattan()
     {
-        Math\Distance::manhattan(array(1,2,3), array(1,2,3,4));
-    }
-
-    /**
-     * Generated from @assert (array(3,4,2,1), array(0,5,6,9)) == 16.
-     *
-     * @covers Math\Distance::manhattan
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testManhattan2()
-    {
-        $this->assertEquals(
-          16,
-          Math\Distance::manhattan(array(3,4,2,1), array(0,5,6,9))
-        );
-    }
-
-    /**
-     * Generated from @assert (array(-2,4), array(0,5)) == 3.
-     *
-     * @covers Math\Distance::manhattan
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testManhattan3()
-    {
+        $d = new Math\Distance(new Math\Distance\Manhattan());
         $this->assertEquals(
           3,
-          Math\Distance::manhattan(array(-2,4), array(0,5))
+          $d->data(array(-2,4), array(0,5))->distance()
         );
     }
 
     /**
-     * Generated from @assert (array(1,2,3), array(1,2,3,4)) throws Math\Distance\IncompatibleItemsException.
-     *
-     * @covers Math\Distance::chebyshev
-     * @covers Math\Distance::_compatibleData
-     * @expectedException Math\Distance\IncompatibleItemsException
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Algorithm::validParameters
+     * @covers Math\Distance\Chebyshev::distance
      */
     public function testChebyshev()
     {
-        Math\Distance::chebyshev(array(1,2,3), array(1,2,3,4));
-    }
-
-    /**
-     * Generated from @assert (array(3,4,2,1), array(0,5,6,9)) == 8.
-     *
-     * @covers Math\Distance::chebyshev
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testChebyshev2()
-    {
+        $d = new Math\Distance(new Math\Distance\Chebyshev());
         $this->assertEquals(
           8,
-          Math\Distance::chebyshev(array(3,4,2,1), array(0,5,6,9))
+          $d->data(array(3,4,2,1), array(0,5,6,9))->distance()
         );
     }
 
     /**
-     * Generated from @assert (array(-2,4), array(0,5)) == 2.
      *
-     * @covers Math\Distance::chebyshev
-     * @covers Math\Distance::_compatibleData
-     */
-    public function testChebyshev3()
-    {
-        $this->assertEquals(
-          2,
-          Math\Distance::chebyshev(array(-2,4), array(0,5))
-        );
-    }
-
-    /**
-     * Generated from @assert ('australopitecus', 'bird') throws Math\Distance\IncompatibleItemsException.
-     *
-     * @covers Math\Distance::hamming
-     * @covers Math\Distance::_compatibleData
-     * @expectedException Math\Distance\IncompatibleItemsException
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance::distance
+     * @covers Math\Distance\Hamming::validParameters
+     * @covers Math\Distance\Hamming::distance
      */
     public function testHamming()
     {
-        Math\Distance::hamming('australopitecus', 'bird');
-    }
-
-    /**
-     * Generated from @assert ('1011101', '1001001') == 2.
-     *
-     * @covers Math\Distance::hamming
-     */
-    public function testHamming2()
-    {
+        $d = new Math\Distance(new Math\Distance\Hamming());
         $this->assertEquals(
           2,
-          Math\Distance::hamming('1011101', '1001001')
+          $d->data('1011101', '1001001')->distance()
         );
     }
 
     /**
-     * Generated from @assert ('chemistry', 'dentistry') == 4.
      *
-     * @covers Math\Distance::hamming
+     * @covers Math\Distance::__construct
+     * @covers Math\Distance::data
+     * @covers Math\Distance\Hamming::validParameters
+     * @expectedException Math\Distance\IncompatibleItemsException
      */
-    public function testHamming3()
+    public function testHammingIncompatibleItemsException()
     {
-        $this->assertEquals(
-          4,
-          Math\Distance::hamming('chemistry', 'dentistry')
-        );
+        $d = new Math\Distance(new Math\Distance\Hamming());
+        $d->data('human','hologram');
     }
+
 }
