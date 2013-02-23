@@ -14,11 +14,11 @@ class Hamming extends Algorithm
      * - http://mathworld.wolfram.com/HammingDistance.html
      * - http://en.wikipedia.org/wiki/Hamming_distance
      *
-     * @param string $s1 first string
-     * @param string $s2 second string
+     * @param string $string1 first string
+     * @param string $string2 second string
      *
      * @throws Distance\IncompatibleItemsException if parameters are not strings of the same length
-     * @return integer the hamming length from s1 to s2
+     * @return integer the hamming length from string1 to string2
      *
      * @assert ('australopitecus', 'bird') throws Distance\IncompatibleItemsException
      * @assert ('1011101', '1001001') == 2
@@ -26,16 +26,16 @@ class Hamming extends Algorithm
      *
      */
 
-    public function distance($s1, $s2)
+    public function distance($string1, $string2)
     {
-        $res = array_diff_assoc(str_split($s1), str_split($s2));
+        $res = array_diff_assoc(str_split($string1), str_split($string2));
         return count($res);
     }
 
-    public function validParameters($s1, $s2)
+    public function validParameters($string1, $string2)
     {
-        if (is_string($s1) === true && is_string($s2) === true
-        && strlen($s1) === strlen($s2)) {
+        if (is_string($string1) === true && is_string($string2) === true
+        && strlen($string1) === strlen($string2)) {
             return true;
         } else {
             throw new IncompatibleItemsException(

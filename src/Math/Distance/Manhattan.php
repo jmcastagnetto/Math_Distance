@@ -11,19 +11,19 @@ class Manhattan extends Algorithm
      * the type of path that one takes when walking around a city block.
      *
      * This distance is defined as
-     * D = SUM( ABS(v1(i) - v2(i)) )    (i = 0..k)
+     * D = SUM( ABS(vector1(i) - vector2(i)) )    (i = 0..k)
      *
      * Refs:
      * - http://en.wikipedia.org/wiki/Manhattan_distance
      * - http://xlinux.nist.gov/dads/HTML/manhattanDistance.html
      * - http://mathworld.wolfram.com/TaxicabMetric.html
      *
-     * @param array $v1 first vector
-     * @param array $v2 second vector
+     * @param array $vector1 first vector
+     * @param array $vector2 second vector
      *
      * @throws Distance\NonNumericException if vectors are not numeric
      * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
-     * @return double The Manhattan distance between v1 and v2
+     * @return double The Manhattan distance between vector1 and vector2
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
@@ -32,12 +32,12 @@ class Manhattan extends Algorithm
      *
      */
 
-    public function distance($v1, $v2)
+    public function distance($vector1, $vector2)
     {
-        $n = count($v1);
+        $n = count($vector1);
         $sum = 0;
         for ($i = 0; $i < $n; $i++) {
-            $sum += abs($v1[$i] - $v2[$i]);
+            $sum += abs($vector1[$i] - $vector2[$i]);
         }
         return $sum;
     }

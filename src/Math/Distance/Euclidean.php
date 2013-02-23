@@ -7,19 +7,19 @@ class Euclidean extends Algorithm
     /**
      * Euclidean distance metric between two vectors
      *
-     * The euclidean distance between two vectors (v1, v2) is defined as
-     * D = SQRT(SUM((v1(i) - v2(i))^2))  (i = 0..k)
+     * The euclidean distance between two vectors (vector1, vector2) is defined as
+     * D = SQRT(SUM((vector1(i) - vector2(i))^2))  (i = 0..k)
      *
      * Refs:
      * - http://mathworld.wolfram.com/EuclideanMetric.html
      * - http://en.wikipedia.org/wiki/Euclidean_distance
      *
-     * @param array $v1 first vector
-     * @param array $v2 second vector
+     * @param array $vector1 first vector
+     * @param array $vector2 second vector
      *
      * @throws Distance\NonNumericException if vectors are not numeric
      * @throws Distance\ImcompatibleItemsException if vectors are of dissimilar size
-     * @return double The Euclidean distance between v1 and v2
+     * @return double The Euclidean distance between vector1 and vector2
      * @see _compatibleData()
      *
      * @assert (array(1,2,3), array(1,2,3,4)) throws Distance\IncompatibleItemsException
@@ -29,12 +29,12 @@ class Euclidean extends Algorithm
      *
      */
 
-    public function distance($v1, $v2)
+    public function distance($vector1, $vector2)
     {
-        $n = count($v1);
+        $n = count($vector1);
         $sum = 0;
         for ($i = 0; $i < $n; $i++) {
-            $sum += ($v1[$i] - $v2[$i]) * ($v1[$i] - $v2[$i]);
+            $sum += ($vector1[$i] - $vector2[$i]) * ($vector1[$i] - $vector2[$i]);
         }
         return sqrt($sum);
     }

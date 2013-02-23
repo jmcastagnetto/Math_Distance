@@ -23,16 +23,16 @@ namespace Math;
  *
  * require "../vendor/autoload.php";
  *
- * $v1 = array(0,2,1);
- * $v2 = array(1,4,5);
+ * $vector1 = array(0,2,1);
+ * $vector2 = array(1,4,5);
  * $m = new Math\Distance(new Math\Distance\Euclidean());
- * $euclidean = $m->data($v1, $v2)->distance();
+ * $euclidean = $m->data($vector1, $vector2)->distance();
  * $manhattan = $m->algorithm(new Math\Distance\Manhattan())
- *                ->data($v1, $v2)->distance();
+ *                ->data($vector1, $vector2)->distance();
  * $chebyshev = $m->algorithm(new Math\Distance\Chebyshev())
- *                ->data($v1, $v2)->distance();
+ *                ->data($vector1, $vector2)->distance();
  * $minkowski = $m->algorithm(new Math\Distance\Minkowski(3))
- *                ->data($v1, $v2)->distance();
+ *                ->data($vector1, $vector2)->distance();
  * $hamming = $m->algorithm(new Math\Distance\Hamming())
  *              ->data('1011101', '1001001')->distance();
  *
@@ -48,8 +48,8 @@ namespace Math;
 class Distance
 {
 
-    protected $v1;
-    protected $v2;
+    protected $vector1;
+    protected $vector2;
     protected $algo;
 
     /**
@@ -78,16 +78,16 @@ class Distance
     /**
      * Validates and sets the data (vectors or strings)
      *
-     * @param mixed $v1
-     * @param mixed $v2
+     * @param mixed $vector1
+     * @param mixed $vector2
      */
 
-    public function data($v1, $v2)
+    public function data($vector1, $vector2)
     {
-        if (!is_null($v1) && !is_null($v2)
-        && $this->algo->validParameters($v1, $v2)) {
-            $this->v1 = $v1;
-            $this->v2 = $v2;
+        if (!is_null($vector1) && !is_null($vector2)
+        && $this->algo->validParameters($vector1, $vector2)) {
+            $this->vector1 = $vector1;
+            $this->vector2 = $vector2;
         }
         return $this;
     }
@@ -99,7 +99,7 @@ class Distance
 
     public function distance()
     {
-        return $this->algo->distance($this->v1, $this->v2);
+        return $this->algo->distance($this->vector1, $this->vector2);
     }
 
 }
