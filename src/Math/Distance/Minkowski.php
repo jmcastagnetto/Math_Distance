@@ -8,10 +8,12 @@ namespace Math\Distance;
  */
 class Minkowski extends Algorithm
 {
+
     private $_order;
     private $_algo;
 
-    public function __construct($order) {
+    public function __construct($order)
+    {
         $this->order($order);
     }
 
@@ -20,14 +22,15 @@ class Minkowski extends Algorithm
      *
      * @param numeric $order
      */
-    public function order($order) {
-        if ( $order === 0 ) {
+
+    public function order($order)
+    {
+        if ($order === 0) {
             throw new OrderOutOfBoundsException(
-                'Minkowski distance order cannot be zero'
-            );
-        } elseif ( $order === 1 ) {
+            'Minkowski distance order cannot be zero');
+        } elseif ($order === 1) {
             $this->_algo = "Manhattan";
-        } elseif ( $order === 2 ) {
+        } elseif ($order === 2) {
             $this->_algo = "Euclidean";
         }
         $this->_order = $order;
@@ -70,19 +73,20 @@ class Minkowski extends Algorithm
      * @assert (array(0,5,6,9), array(3,4,2,1), 4) == pow(pow(3,3)+pow(-1,3)+pow(4,3)+pow(-8,3),1/4)
      *
      */
+
     public function distance($v1, $v2)
     {
         if (in_array($this->_algo, array("Euclidean", "Manhattan"))) {
-            $class = 'Math\\Distance\\'.$this->_algo;
+            $class = 'Math\\Distance\\' . $this->_algo;
             $d = new $class;
             return $d->distance($v1, $v2);
-        } else{
+        } else {
             $n = count($v1);
             $sum = 0;
-            for ($i=0; $i < $n; $i++) {
+            for ($i = 0; $i < $n; $i++) {
                 $sum += pow(abs($v1[$i] - $v2[$i]), $this->_order);
             }
-            return pow($sum, 1/$this->_order);
+            return pow($sum, 1 / $this->_order);
         }
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Math;
+
 /**
  * Math\Distance
  *
@@ -56,7 +57,9 @@ class Distance
      *
      * @param Distance\Algorithm $algo
      */
-    public function __construct(Distance\Algorithm $algo) {
+
+    public function __construct(Distance\Algorithm $algo)
+    {
         $this->algorithm($algo);
     }
 
@@ -65,7 +68,9 @@ class Distance
      *
      * @param Distance\Algorithm $algo
      */
-    public function algorithm(Distance\Algorithm $algo){
+
+    public function algorithm(Distance\Algorithm $algo)
+    {
         $this->algo = $algo;
         return $this;
     }
@@ -76,9 +81,11 @@ class Distance
      * @param mixed $v1
      * @param mixed $v2
      */
-    public function data($v1, $v2) {
+
+    public function data($v1, $v2)
+    {
         if (!is_null($v1) && !is_null($v2)
-            && $this->algo->validParameters($v1, $v2)) {
+        && $this->algo->validParameters($v1, $v2)) {
             $this->v1 = $v1;
             $this->v2 = $v2;
         }
@@ -89,7 +96,9 @@ class Distance
      * Calls the appropriate algorithm to calculate the distance metric
      *
      */
-    public function distance() {
+
+    public function distance()
+    {
         return $this->algo->distance($this->v1, $this->v2);
     }
 

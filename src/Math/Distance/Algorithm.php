@@ -10,6 +10,7 @@ abstract class Algorithm
      * @param mixed $v1
      * @param mixed $v2
      */
+
     abstract function distance($v1, $v2);
 
     /**
@@ -21,12 +22,15 @@ abstract class Algorithm
      * @throws NonNumericException if the arrays are not numeric
      * @throws IncompatibleItemsException if the arrays are not of the same size
      */
-    public function validParameters(array $v1, array $v2) {
-         $f_num = function ($v, $k) {
+
+    public function validParameters(array $v1, array $v2)
+    {
+        $f_num = function ($v, $k)
+        {
             if (!is_numeric($v)) {
                 throw new NonNumericException(
-                  'Vectors must contain numeric data, non-numeric item found: '.$v
-                );
+                'Vectors must contain numeric data, non-numeric item found: '
+                . $v);
             }
         };
         // check that each vector member is of numeric type
@@ -38,8 +42,8 @@ abstract class Algorithm
             return true;
         } else {
             throw new IncompatibleItemsException(
-              'Vectors must be of equal size: n1='.count($v1).', n2='.count($v2)
-            );
+            'Vectors must be of equal size: n1=' . count($v1) . ', n2='
+            . count($v2));
         }
     }
 }

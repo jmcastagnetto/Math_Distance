@@ -1,4 +1,6 @@
 <?php
 namespace Math\Distance;
 
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+}

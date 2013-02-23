@@ -1,4 +1,6 @@
 <?php
 namespace Math\Distance;
 
-class NonNumericException extends Exception {}
+class NonNumericException extends Exception
+{
+}

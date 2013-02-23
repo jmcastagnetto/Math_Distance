@@ -31,11 +31,12 @@ class Manhattan extends Algorithm
      * @assert (array(-2,4), array(0,5)) == 3
      *
      */
+
     public function distance($v1, $v2)
     {
         $n = count($v1);
         $sum = 0;
-        for ($i=0; $i < $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
             $sum += abs($v1[$i] - $v2[$i]);
         }
         return $sum;
