@@ -1,4 +1,6 @@
 <?php
 namespace Math\Distance;
 
-class OrderOutOfBoundsException extends Exception {}
+class OrderOutOfBoundsException extends Exception
+{
+}

@@ -25,21 +25,21 @@ class Hamming extends Algorithm
      * @assert ('chemistry', 'dentistry') == 4
      *
      */
+
     public function distance($s1, $s2)
     {
         $res = array_diff_assoc(str_split($s1), str_split($s2));
         return count($res);
     }
 
-    public function validParameters($s1, $s2) {
-        if (is_string($s1) === true
-            && is_string($s2) === true
-            && strlen($s1) === strlen($s2)) {
+    public function validParameters($s1, $s2)
+    {
+        if (is_string($s1) === true && is_string($s2) === true
+        && strlen($s1) === strlen($s2)) {
             return true;
         } else {
             throw new IncompatibleItemsException(
-                'Expecting two strings of equal length'
-            );
+            'Expecting two strings of equal length');
         }
     }
 }

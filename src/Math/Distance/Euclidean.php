@@ -28,13 +28,13 @@ class Euclidean extends Algorithm
      * @assert (array(2,4,6,7), array(4,5,1,9)) == sqrt(4+1+25+4)
      *
      */
+
     public function distance($v1, $v2)
     {
         $n = count($v1);
         $sum = 0;
-        for ($i=0; $i < $n; $i++) {
-            $sum += ($v1[$i] - $v2[$i])
-                    * ($v1[$i] - $v2[$i]);
+        for ($i = 0; $i < $n; $i++) {
+            $sum += ($v1[$i] - $v2[$i]) * ($v1[$i] - $v2[$i]);
         }
         return sqrt($sum);
     }

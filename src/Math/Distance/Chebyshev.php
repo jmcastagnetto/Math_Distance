@@ -28,11 +28,12 @@ class Chebyshev extends Algorithm
      * @throws NonNumericException if vectors are not numeric
      * @return double The Chebyshev distance between v1 and v2
      */
+
     public function distance($v1, $v2)
     {
         $n = count($v1);
         $diffvals = array();
-        for ($i=0; $i < $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
             $diffvals[$i] = abs($v1[$i] - $v2[$i]);
         }
         return max($diffvals);
