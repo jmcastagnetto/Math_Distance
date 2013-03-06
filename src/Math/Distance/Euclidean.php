@@ -2,6 +2,12 @@
 
 namespace Math\Distance;
 
+/**
+ * Implements the Euclidean distance algorithm
+ *
+ * @see Algorithm
+ */
+
 class Euclidean extends Algorithm
 {
     /**

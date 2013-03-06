@@ -1,6 +1,12 @@
 <?php
 namespace Math\Distance;
 
+/**
+ * Implements the Manhattan distance algorithm
+ *
+ * @see Algorithm
+ */
+
 class Manhattan extends Algorithm
 {
     /**

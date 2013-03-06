@@ -2,6 +2,12 @@
 
 namespace Math\Distance;
 
+/**
+ * Implements the Hamming distance algorithm
+ *
+ * @see Algorithm
+ */
+
 class Hamming extends Algorithm
 {
     /**

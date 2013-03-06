@@ -2,7 +2,7 @@
 namespace Math\Distance;
 
 /**
- * Class: Minkowski
+ * Implements the Minkowski distance algorithm
  *
  * @see Algorithm
  */
@@ -18,7 +18,7 @@ class Minkowski extends Algorithm
     }
 
     /**
-     * order
+     * Sets the order for the Minkowski distance
      *
      * @param numeric $order
      */

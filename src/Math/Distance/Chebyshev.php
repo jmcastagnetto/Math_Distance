@@ -3,7 +3,7 @@
 namespace Math\Distance;
 
 /**
- * Class: Chebyshev
+ * Implements the Chebyshev distance algorithm
  *
  * @see Algorithm
  */
